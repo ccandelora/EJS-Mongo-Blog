@@ -39,7 +39,6 @@ app.use(express.static("public"));
 
 app.get("/", function (req, res) {
   Post.find({}).then((foundPosts) => {
-    console.log('we have found a post');
     if (foundPosts.length > 0) {
       res.render("home", {
         homeStartingContent: homeStartingContent, 
@@ -80,14 +79,10 @@ app.post("/compose", function (req, res) {
   res.redirect("/");
 });
 
-app.get("/posts/:title", function (req, res) {
-  //const id = req.params.id;
-  //const post = posts[id];
-  //const requestedTitle = req.params.title;
-  console.log(req.params.title);
-  Post.findOne({title: req.params.title}).then((postItem) => {
+app.get("/posts/:postId", function (req, res) {
+  const oid = new mongoose.mongo.ObjectId(req.params.postId);
+  Post.findOne({_id: oid }).then((postItem) => {
     if (postItem !== null) {
-      console.log(postItem);
       res.render("post", {post: postItem});
     } else {
       console.log("No matching post found");
